@@ -1,0 +1,84 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'com.main'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 11
+
+def log4jVersion = '2.11.1'
+def jacksonDataBindVersion = '2.5.4'
+def jacksonDataFmtVersion = '2.9.9'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    // log4j2
+    compile "org.apache.logging.log4j:log4j-api:$log4jVersion"
+    compile "org.apache.logging.log4j:log4j-core:$log4jVersion"
+
+    // log4j2 yaml requires jackson
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonDataBindVersion"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonDataFmtVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonDataBindVersion"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonDataFmtVersion"
+
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.12.0'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.main.Runner'
+    }
+}
+
+compileJava {
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath
+        ]
+
+        classpath = files()
+    }
+}
+
+def module = 'com.main.main'
+
+run {
+    // this has to be evaluated at end. otherwise you'll have problems
+    // attaching the debugger from gradle task or append the jvm args to
+    // without losing what's being added by gradle esp. when debugging.
+    doFirst {
+        def mainModule = module  + '/' + application.mainClassName
+        def log4jFile = "${project.rootDir}" + '/build/classes/java/main/com/main/resources/log4j2.yaml'
+        println log4jFile
+        jvmArgs += [
+                '--module-path', classpath.asPath,
+                '--module', mainModule,
+                '-Dlog4j.configurationFile=' + log4jFile
+        ]
+
+        println jvmArgs
+    }
+
+//    jvmArgs.add("-Dlog4j.configurationFile=/Users/Sunny/prv/github/ExpmoduleA/com.main/build/classes/java/main/com/main/resources/log4j2.yaml")
+}
+
+task make(type: Copy) {
+    from 'src/main/java/com/main/resources/'
+    exclude "**/*.java"
+    into 'build/classes/java/main/com/main/resources/'
+}
+
+make.dependsOn build
+
+application {
+    mainClassName 'com.main.Runner'
+}

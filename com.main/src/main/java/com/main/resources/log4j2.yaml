@@ -1,0 +1,15 @@
+Configuration:
+  name: default
+
+  Appenders:
+    Console:
+      name: TerminalAppender
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: "%highlight{%d{yyyy-MM-dd HH:mm:ss} %-5p %c:%L - %m%n}"
+
+  Loggers:
+    Root:
+      level: debug
+      AppenderRef:
+        - ref: TerminalAppender
