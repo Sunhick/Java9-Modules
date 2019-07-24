@@ -1,5 +1,6 @@
 package com.main;
 
+import org.main.Printer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,5 +20,8 @@ public class Runner {
         log.debug(">> " + resource.getFile());
         log.warn(">> " + resource.getFile());
         log.error(">> " + resource.getFile());
+
+        Printer printer = new Printer();
+        printer.print(Constants.LOG_FILE);
     }
 }

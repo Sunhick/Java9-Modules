@@ -19,6 +19,8 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
+    compile files('/Users/Sunny/prv/github/ExpmoduleA/org.main/build/libs/org.main-1.0-SNAPSHOT.jar')
+
     // log4j2
     compile "org.apache.logging.log4j:log4j-api:$log4jVersion"
     compile "org.apache.logging.log4j:log4j-core:$log4jVersion"
@@ -41,7 +43,7 @@ jar {
 
 compileJava {
     doFirst {
-        options.compilerArgs = [
+        options.compilerArgs += [
                 '--module-path', classpath.asPath
         ]
 
@@ -65,7 +67,7 @@ run {
                 '-Dlog4j.configurationFile=' + log4jFile
         ]
 
-        println jvmArgs
+//        println jvmArgs
     }
 
 //    jvmArgs.add("-Dlog4j.configurationFile=/Users/Sunny/prv/github/ExpmoduleA/com.main/build/classes/java/main/com/main/resources/log4j2.yaml")
@@ -82,3 +84,7 @@ make.dependsOn build
 application {
     mainClassName 'com.main.Runner'
 }
+
+// Application plugin scripts aren't updated to generate the right executable.
+// For most cases it works but for looking modules etc it won't work as they expect
+// --add-modules, modules-path to be passed in.

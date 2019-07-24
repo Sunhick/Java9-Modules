@@ -1,0 +1,4 @@
+rootProject.name='ExpModuleA'
+
+include 'com.main',
+        'org.main'

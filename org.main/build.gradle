@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+}
+
+group 'org.main'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 11
+
+def log4jVersion = '2.11.1'
+def jacksonDataBindVersion = '2.5.4'
+def jacksonDataFmtVersion = '2.9.9'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    // log4j2
+    compile "org.apache.logging.log4j:log4j-api:$log4jVersion"
+    compile "org.apache.logging.log4j:log4j-core:$log4jVersion"
+
+    // log4j2 yaml requires jackson
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonDataBindVersion"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonDataFmtVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonDataBindVersion"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonDataFmtVersion"
+}
+
+compileJava {
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath
+        ]
+
+        classpath = files()
+    }
+}
